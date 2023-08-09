@@ -82,9 +82,7 @@ function generateDisplay(data) {
     </div>
     <div id = "imageAndButtons">
         <div id = buttons>
-            <button class = "button">Base</button>
-            <button class = "button">E1</button>
-            <button class = "button">E2</button>
+            ${data.art.map(art => `<button class="button" id="${art.name}">${art.name}</button>`).join('')}
         </div>
         <div id = "modalImage">
             <img id = "characterImg" src = "${data.art[0].link}"
@@ -97,11 +95,17 @@ function generateDisplay(data) {
     buttons.forEach(button =>{
         button.addEventListener("click",changeImg)
     })
-    function changeImg(){
-        console.log(data)
-        characterImg = document.getElementById(characterImg)
-        console.log(characterImg)
-    }
 
+    function changeImg(){
+        id = this.id
+        console.log(id)
+        i = data.art.findIndex(x => x.name === id)
+        let characterImg = document.getElementById('characterImg')
+        characterImg.setAttribute('src', data.art[i].link)
+        console.log(characterImg)
+    
+    }
 }
+
+
 
