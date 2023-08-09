@@ -82,7 +82,7 @@ function generateDisplay(data) {
     </div>
     <div id = "imageAndButtons">
         <div id = buttons>
-            ${data.art.map(art => `<button class="button" id="${art.name}">${art.name}</button>`).join('')}
+            ${data.art.map((art,index) => `<button class="button" id="${index}">${art.name}</button>`).join('')}
         </div>
         <div id = "modalImage">
             <img id = "characterImg" src = "${data.art[0].link}"
@@ -97,9 +97,7 @@ function generateDisplay(data) {
     })
 
     function changeImg(){
-        id = this.id
-        console.log(id)
-        i = data.art.findIndex(x => x.name === id)
+        i = this.id
         let characterImg = document.getElementById('characterImg')
         characterImg.setAttribute('src', data.art[i].link)
         console.log(characterImg)
