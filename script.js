@@ -12,6 +12,7 @@ function fectch_All (){
 }
 fectch_All()
 
+//generate all operator
 function generatetiles(data){
     console.log(data)
     for ( objects of data) {
@@ -21,9 +22,9 @@ function generatetiles(data){
         button.classList.add('grid')
         button.innerHTML = `
         <div class="op-image">
-            <img src = "${objects.art[0].link}"
+            <img src = "${objects.art[0].link}">
+            ${objects.name}
         </div>
-        <div>${objects.name}<div>
         `
         if(objects.rarity === 6){
             button.style.backgroundColor = 'rgb(255, 102, 0)'
@@ -66,7 +67,7 @@ function generateDisplay(data) {
     modal.classList.add('modal');
     overlay.append(modal);
 
-    // Close artist info button
+    // Close operator info button
     let closeBtn = document.createElement('button');
     closeBtn.innerText = "X";
     modal.append(closeBtn);
@@ -76,32 +77,75 @@ function generateDisplay(data) {
 
     // operator info
     let operatorinfor = document.createElement('section');
+    operatorinfor.id = "operatorinfor"
     operatorinfor.innerHTML = `
-    <div>
-        <h2>${data.name}</h2>
-    </div>
     <div id = "imageAndButtons">
+        <h2>${data.name}</h2>
         <div id = buttons>
-            ${data.art.map((art,index) => `<button class="button" id="${index}">${art.name}</button>`).join('')}
+            ${data.art.map((art,index) => `<button class="imgButton" id="${index}">${art.name}</button>`).join('')}
         </div>
         <div id = "modalImage">
-            <img id = "characterImg" src = "${data.art[0].link}"
+            <img id = "characterImg" src = "${data.art[0].link}">
+        </div>
+    </div>
+
+    <div id = "textContent">
+        <h3>Biography</h3>
+        <p>${data.biography}</p>
+        <h3>skills</h3>
+        <div id = buttons>
+            ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}>${skills.name}</button>`).join('')}
+        </div>
+        <div>
+            <h5>${data.skills[0].name}</h5>
+            <input type="range" value="1" min="1" max="10" name="skillLevel" id="skill0Level" oninput="changeSkillLevel(this,0)" style="margin-top:10px" class=" skillLevelInput">
+            <div>
+                <p>SP Charge Type</p>
+                <p>Skill Activation</p>
+                <p>Duration</p>
+            </div>
+            <section>
+            <div>
+                <p>${data.skills[0].skill_charge}</p>
+                <p>${data.skills[0].skill_activation}</p>
+                <p>${data.skills[0].variations[0].duration}</p>
+            </div>
+            <div>
+                <p></p>
+                <p></p>
+            </div>
+            </section>
         </div>
     </div>
     `
     modal.append(operatorinfor);
 
-    let buttons = document.querySelectorAll('.button')
-    buttons.forEach(button =>{
+    let imgbuttons = document.querySelectorAll('.imgButton')
+   imgbuttons.forEach(button =>{
         button.addEventListener("click",changeImg)
     })
 
+    let skillbuttons = document.querySelectorAll('.skillButton')
+    skillbuttons.forEach(button =>{
+        button.addEventListener("click",changeSkill)
+    })
+
     function changeImg(){
-        i = this.id
+        let i = this.id
+        console.log(i)
         let characterImg = document.getElementById('characterImg')
-        characterImg.setAttribute('src', data.art[i].link)
+        characterImg.setAttribute('src', data.art[i].link,)
         console.log(characterImg)
     
+    }
+
+    function changeSkill(){
+        let i = this.id
+
+    }
+
+    function changeSkillLevel(){
+        
     }
 }
 
