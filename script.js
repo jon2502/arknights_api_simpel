@@ -20,12 +20,12 @@ function generatetiles(data){
         let name = objects.name
         const button = document.createElement('li')
         button.classList.add('grid')
-        button.innerHTML = `
-        <div class="op-image">
-            <img src = "${objects.art[0].link}">
-            ${objects.name}
-        </div>
-        `
+            button.innerHTML = `
+            <div class="op-image">
+                <img src = "${objects.art[0].link}">
+                ${objects.name}
+            </div>
+            `
         if(objects.rarity === 6){
             button.style.backgroundColor = 'rgb(255, 102, 0)'
         } else if (objects.rarity === 5){
@@ -88,39 +88,49 @@ function generateDisplay(data) {
             <img id = "characterImg" src = "${data.art[0].link}">
         </div>
     </div>
-
-    <div id = "textContent">
-        <h3>Biography</h3>
-        <p>${data.biography}</p>
+    <section>
+    <div id="select_buttons">
+    <button id="select_skills">skills</button>
+    <button id="select_info">Operator info</button>
+    <button id="select_voicelines">Operator voice lines</button>
+    </div>
+    <div id="textContent">
         <h3>skills</h3>
         <div id = buttons>
-            ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}>${skills.name}</button>`).join('')}
+            ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}">${skills.name}</button>`).join('')}
         </div>
-        <div>
+        <div id="skills">
             <h5>${data.skills[0].name}</h5>
-            <input type="range" value="1" min="1" max="10" name="skillLevel" id="skill0Level" oninput="changeSkillLevel(this,0)" style="margin-top:10px" class=" skillLevelInput">
-            <div>
+            <input type="range" value="0" min="1" max="${data.skills[0].variations.length - 1}" name="${data.skills[0].name}" id="skillslider">
+            <div class="skills_text"">
                 <p>SP Charge Type</p>
                 <p>Skill Activation</p>
                 <p>Duration</p>
+                <p>Initial SP</p>
+                <p>SP cost</p>
             </div>
-            <section>
-            <div>
+            <section id="skill_info">
+            <div class="skills_text">
                 <p>${data.skills[0].skill_charge}</p>
                 <p>${data.skills[0].skill_activation}</p>
                 <p>${data.skills[0].variations[0].duration}</p>
+                <p>${data.skills[0].variations[0].initial_sp}</p>
+                <p>${data.skills[0].variations[0].sp_cost}</p>
             </div>
             <div>
-                <p></p>
-                <p></p>
+                <p>${data.skills[0].variations[0].description}</p>
             </div>
             </section>
         </div>
     </div>
+    </section>
     `
     modal.append(operatorinfor);
 
-    let imgbuttons = document.querySelectorAll('.imgButton')
+    let skillslider = document.getElementById('skillslider')
+    skillslider.addEventListener("input",changeSkillLevel)
+
+   let imgbuttons = document.querySelectorAll('.imgButton')
    imgbuttons.forEach(button =>{
         button.addEventListener("click",changeImg)
     })
@@ -129,23 +139,153 @@ function generateDisplay(data) {
     skillbuttons.forEach(button =>{
         button.addEventListener("click",changeSkill)
     })
+    let skillbuton = document.getElementById('select_skills')
+    skillbuton.addEventListener("click",operatorskills)
+
+    let infobutton = document.getElementById('select_info')
+    infobutton.addEventListener("click",operatorinfo)
+
+    let voicebutton = document.getElementById('select_voicelines')
+    voicebutton.addEventListener("click",voicelines)
 
     function changeImg(){
         let i = this.id
-        console.log(i)
         let characterImg = document.getElementById('characterImg')
         characterImg.setAttribute('src', data.art[i].link,)
-        console.log(characterImg)
-    
     }
 
     function changeSkill(){
         let i = this.id
-
+        console.log(i)
+        let skills = document.getElementById('skills')
+        skills.innerHTML = `
+        <h5>${data.skills[i].name}</h5>
+            <input type="range" value="0" min="1" max="${data.skills[i].variations.length - 1}" name="${data.skills[i].name}" id="skillslider">
+            <div class="skills_text"">
+                <p>SP Charge Type</p>
+                <p>Skill Activation</p>
+                <p>Duration</p>
+                <p>Initial SP</p>
+                <p>SP cost</p>
+            </div>
+            <section id="skill_info">
+            <div class="skills_text">
+                <p>${data.skills[i].skill_charge}</p>
+                <p>${data.skills[i].skill_activation}</p>
+                <p>${data.skills[i].variations[0].duration}</p>
+                <p>${data.skills[i].variations[0].initial_sp}</p>
+                <p>${data.skills[i].variations[0].sp_cost}</p>
+            </div>
+            <div>
+                <p>${data.skills[i].variations[0].description}</p>
+            </div>
+            </section>
+        `
+        let skillslider = document.getElementById('skillslider')
+        skillslider.addEventListener("input",changeSkillLevel)
     }
 
     function changeSkillLevel(){
-        
+        let i = this.value
+        console.log(i)
+        let currentname = this.name
+        let id = data.skills.findIndex(({ name }) => name == currentname);  
+        skillinfo = document.getElementById('skill_info')
+        skillinfo.innerHTML =`
+            <div class="skills_text">
+                <p>${data.skills[id].skill_charge}</p>
+                <p>${data.skills[id].skill_activation}</p>
+                <p>${data.skills[id].variations[i].duration}</p>
+                <p>${data.skills[id].variations[i].initial_sp}</p>
+                <p>${data.skills[id].variations[i].sp_cost}</p>
+            </div>
+            <div>
+                <p>${data.skills[id].variations[i].description}</p>
+            </div>
+        `
+    }
+    function operatorskills(){
+        let box = document.getElementById('textContent')
+        box.innerHTML= `
+        <h3>skills</h3>
+        <div id = buttons>
+            ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}">${skills.name}</button>`).join('')}
+        </div>
+        <div id="skills">
+            <h5>${data.skills[0].name}</h5>
+            <input type="range" value="0" min="1" max="${data.skills[0].variations.length - 1}" name="${data.skills[0].name}" id="skillslider">
+            <div class="skills_text"">
+                <p>SP Charge Type</p>
+                <p>Skill Activation</p>
+                <p>Duration</p>
+                <p>Initial SP</p>
+                <p>SP cost</p>
+            </div>
+            <section id="skill_info">
+            <div class="skills_text">
+                <p>${data.skills[0].skill_charge}</p>
+                <p>${data.skills[0].skill_activation}</p>
+                <p>${data.skills[0].variations[0].duration}</p>
+                <p>${data.skills[0].variations[0].initial_sp}</p>
+                <p>${data.skills[0].variations[0].sp_cost}</p>
+            </div>
+            <div>
+                <p>${data.skills[0].variations[0].description}</p>
+            </div>
+            </section>
+        </div>
+        `
+        let skillslider = document.getElementById('skillslider')
+        skillslider.addEventListener("input",changeSkillLevel)
+
+        let skillbuttons = document.querySelectorAll('.skillButton')
+        skillbuttons.forEach(button =>{
+            button.addEventListener("click",changeSkill)
+        })
+    }
+
+    function operatorinfo(){
+        let box = document.getElementById('textContent')
+            box.innerHTML=`
+                <h3>Biography</h3>
+                <p>${data.biography}</p>
+                <h4> affiliation: ${data.affiliation[0]}
+            `
+    }
+
+    function voicelines(){
+        let box = document.getElementById('textContent')
+        const entries = Object.entries(data.voicelines);
+        slicenumber = entries.length/7
+        slicearray=[]
+        buttonarray =[1,2,3,4,5,6,7];
+        for (let i = 0; i<entries.length; i+=slicenumber){
+            const chunk = entries.slice(i, i + slicenumber);
+            slicearray.push(chunk);
+        }
+        console.log(slicearray)
+        box.innerHTML=`
+        <h2> voice lines </h2>
+        <div id='selected_voice_lines'>
+        ${slicearray[0].map((voicelines) => `<p>${voicelines}</p>`).join('')}
+        </div>
+        <div id='voice_line_bt'>
+        ${buttonarray.map((numbers) => `<button class="voiceButton" id="${numbers-1}">${numbers}</button>`).join('')}
+        </div>
+        `
+        let voiceButtons = document.querySelectorAll('.voiceButton')
+        voiceButtons.forEach(button =>{
+            button.addEventListener("click",voice_selctor(slicearray))
+        })
+    }
+
+    function voice_selctor(slicearray){
+        let i = this.id
+        console.log(i)
+        let box = document.getElementById('selected_voice_lines')
+        box.innerHTML =`
+        ${slicearray[i].map((voicelines) => `<p>${voicelines}</p>`).join('')}
+        `
     }
 }
 

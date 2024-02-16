@@ -57,6 +57,11 @@ h2{
     margin-left: 5%;
     margin-right: 5%;
 }
+#select_buttons{
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+}
 #buttons{
     display: inline-grid;
     grid-template-columns: auto auto auto;
@@ -65,4 +70,15 @@ h2{
 #modalImage img {
     width: 85%;
     margin-top: 0.5%;
+}
+.skills_text{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+/*voiceline styling*/
+#voice_line_bt{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5vw;
 }
