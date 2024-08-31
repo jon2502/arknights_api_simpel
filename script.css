@@ -63,9 +63,8 @@ h2{
     gap: 1vw;
 }
 #buttons{
-    display: inline-grid;
-    grid-template-columns: auto auto auto;
-    grid-gap: 2%;
+    display: flex;
+    grid-gap: 1%;
 }
 #modalImage img {
     width: 85%;

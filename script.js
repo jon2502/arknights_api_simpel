@@ -246,10 +246,15 @@ function generateDisplay(data) {
 
     function operatorinfo(){
         let box = document.getElementById('textContent')
+        const info = Object.entries(data.lore);
             box.innerHTML=`
                 <h3>Biography</h3>
                 <p>${data.biography}</p>
                 <h4> affiliation: ${data.affiliation[0]}
+                <h4>Infto</h4>
+                <ul>
+                ${info.map((i) => `<li>${i[0]}: ${i[1]}</li>`).join('').replace(/_/g, " ")}
+                </ul>
             `
     }
 
@@ -264,10 +269,11 @@ function generateDisplay(data) {
             slicearray.push(chunk);
         }
         console.log(slicearray)
+        //insert voice line then use join to get rid of , and then replace all _ with a space via the use of regex
         box.innerHTML=`
         <h2> voice lines </h2>
         <div id='selected_voice_lines'>
-        ${slicearray[0].map((voicelines) => `<p>${voicelines}</p>`).join('')}
+        ${slicearray[0].map((voicelines) => `<p>${voicelines[0]}: ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
         </div>
         <div id='voice_line_bt'>
         ${buttonarray.map((numbers) => `<button class="voiceButton" id="${numbers-1}">${numbers}</button>`).join('')}
@@ -275,16 +281,15 @@ function generateDisplay(data) {
         `
         let voiceButtons = document.querySelectorAll('.voiceButton')
         voiceButtons.forEach(button =>{
-            button.addEventListener("click",voice_selctor(slicearray))
+            button.addEventListener("click", () =>voice_selctor(slicearray, button.id))
         })
     }
 
-    function voice_selctor(slicearray){
-        let i = this.id
+    function voice_selctor(slicearray, i){
         console.log(i)
         let box = document.getElementById('selected_voice_lines')
         box.innerHTML =`
-        ${slicearray[i].map((voicelines) => `<p>${voicelines}</p>`).join('')}
+        ${slicearray[i].map((voicelines) => `<p>${voicelines[0]}: ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
         `
     }
 }
