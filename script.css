@@ -66,9 +66,11 @@ h2{
     display: flex;
     grid-gap: 1%;
 }
+/* image styling */
 #modalImage img {
-    width: 85%;
-    margin-top: 0.5%;
+    width: 90%;
+    margin-top: -0.5%;
+    margin-left: -5%;
 }
 .skills_text{
     display: flex;

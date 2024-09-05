@@ -1,10 +1,9 @@
 const container = document.getElementById('container')
-const URL1 = 'https://rhodesapi.up.railway.app/api/operator'
-const URL2 ='https://rhodesapi.up.railway.app/api/operator/'
+const URL = 'https://rhodesapi.up.railway.app/api/operator'
 
 //fetching all operators
 function fectch_All (){
-    fetch(`${URL1}`)
+    fetch(`${URL}`)
     .then((response) => response.json())
       .then((data) => {
        generatetiles(data)
@@ -14,9 +13,7 @@ fectch_All()
 
 //generate all operator
 function generatetiles(data){
-    console.log(data)
     for ( objects of data) {
-        console.log(objects.name)
         let name = objects.name
         const button = document.createElement('li')
         button.classList.add('grid')
@@ -47,8 +44,7 @@ function generatetiles(data){
 }
 
 function displaySelectedOperator(name){
-    console.log(name)
-    fetch(`${URL2}${name}`)
+    fetch(`${URL}/${name}`)
     .then((response) => response.json())
       .then((data) => {
        generateDisplay(data)
@@ -95,33 +91,7 @@ function generateDisplay(data) {
     <button id="select_voicelines">Operator voice lines</button>
     </div>
     <div id="textContent">
-        <h3>skills</h3>
-        <div id = buttons>
-            ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}">${skills.name}</button>`).join('')}
-        </div>
-        <div id="skills">
-            <h5>${data.skills[0].name}</h5>
-            <input type="range" value="0" min="1" max="${data.skills[0].variations.length - 1}" name="${data.skills[0].name}" id="skillslider">
-            <div class="skills_text"">
-                <p>SP Charge Type</p>
-                <p>Skill Activation</p>
-                <p>Duration</p>
-                <p>Initial SP</p>
-                <p>SP cost</p>
-            </div>
-            <section id="skill_info">
-            <div class="skills_text">
-                <p>${data.skills[0].skill_charge}</p>
-                <p>${data.skills[0].skill_activation}</p>
-                <p>${data.skills[0].variations[0].duration}</p>
-                <p>${data.skills[0].variations[0].initial_sp}</p>
-                <p>${data.skills[0].variations[0].sp_cost}</p>
-            </div>
-            <div>
-                <p>${data.skills[0].variations[0].description}</p>
-            </div>
-            </section>
-        </div>
+        ${setskills(data,0,0)}
     </div>
     </section>
     `
@@ -169,16 +139,7 @@ function generateDisplay(data) {
                 <p>SP cost</p>
             </div>
             <section id="skill_info">
-            <div class="skills_text">
-                <p>${data.skills[i].skill_charge}</p>
-                <p>${data.skills[i].skill_activation}</p>
-                <p>${data.skills[i].variations[0].duration}</p>
-                <p>${data.skills[i].variations[0].initial_sp}</p>
-                <p>${data.skills[i].variations[0].sp_cost}</p>
-            </div>
-            <div>
-                <p>${data.skills[i].variations[0].description}</p>
-            </div>
+                ${setskilllevel(data,i,0)}
             </section>
         `
         let skillslider = document.getElementById('skillslider')
@@ -190,50 +151,16 @@ function generateDisplay(data) {
         console.log(i)
         let currentname = this.name
         let id = data.skills.findIndex(({ name }) => name == currentname);  
+        console.log(id)
         skillinfo = document.getElementById('skill_info')
         skillinfo.innerHTML =`
-            <div class="skills_text">
-                <p>${data.skills[id].skill_charge}</p>
-                <p>${data.skills[id].skill_activation}</p>
-                <p>${data.skills[id].variations[i].duration}</p>
-                <p>${data.skills[id].variations[i].initial_sp}</p>
-                <p>${data.skills[id].variations[i].sp_cost}</p>
-            </div>
-            <div>
-                <p>${data.skills[id].variations[i].description}</p>
-            </div>
+            ${setskilllevel(data,id,i)}
         `
     }
     function operatorskills(){
         let box = document.getElementById('textContent')
         box.innerHTML= `
-        <h3>skills</h3>
-        <div id = buttons>
-            ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}">${skills.name}</button>`).join('')}
-        </div>
-        <div id="skills">
-            <h5>${data.skills[0].name}</h5>
-            <input type="range" value="0" min="1" max="${data.skills[0].variations.length - 1}" name="${data.skills[0].name}" id="skillslider">
-            <div class="skills_text"">
-                <p>SP Charge Type</p>
-                <p>Skill Activation</p>
-                <p>Duration</p>
-                <p>Initial SP</p>
-                <p>SP cost</p>
-            </div>
-            <section id="skill_info">
-            <div class="skills_text">
-                <p>${data.skills[0].skill_charge}</p>
-                <p>${data.skills[0].skill_activation}</p>
-                <p>${data.skills[0].variations[0].duration}</p>
-                <p>${data.skills[0].variations[0].initial_sp}</p>
-                <p>${data.skills[0].variations[0].sp_cost}</p>
-            </div>
-            <div>
-                <p>${data.skills[0].variations[0].description}</p>
-            </div>
-            </section>
-        </div>
+        ${setskills(data,0,0)}
         `
         let skillslider = document.getElementById('skillslider')
         skillslider.addEventListener("input",changeSkillLevel)
@@ -292,6 +219,53 @@ function generateDisplay(data) {
         ${slicearray[i].map((voicelines) => `<p>${voicelines[0]}: ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
         `
     }
+}
+
+function setskills(data,i1,i2){
+    return `
+        <h3>skills</h3>
+        <div id = buttons>
+            ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}">${skills.name}</button>`).join('')}
+        </div>
+        <div id="skills">
+            <h5>${data.skills[i1].name}</h5>
+            <input type="range" value="0" min="1" max="${data.skills[i1].variations.length - 1}" name="${data.skills[i1].name}" id="skillslider">
+            <div class="skills_text"">
+                <p>SP Charge Type</p>
+                <p>Skill Activation</p>
+                <p>Duration</p>
+                <p>Initial SP</p>
+                <p>SP cost</p>
+            </div>
+            <section id="skill_info">
+            <div class="skills_text">
+                <p>${data.skills[i1].skill_charge}</p>
+                <p>${data.skills[i1].skill_activation}</p>
+                <p>${data.skills[i1].variations[i2].duration}</p>
+                <p>${data.skills[i1].variations[i2].initial_sp}</p>
+                <p>${data.skills[i1].variations[i2].sp_cost}</p>
+            </div>
+            <div>
+                <p>${data.skills[i1].variations[i2].description}</p>
+            </div>
+            </section>
+        </div>
+        `
+}
+
+function setskilllevel(data,i1,i2){
+    return`
+               <div class="skills_text">
+                <p>${data.skills[i1].skill_charge}</p>
+                <p>${data.skills[i1].skill_activation}</p>
+                <p>${data.skills[i1].variations[i2].duration}</p>
+                <p>${data.skills[i1].variations[i2].initial_sp}</p>
+                <p>${data.skills[i1].variations[i2].sp_cost}</p>
+            </div>
+            <div>
+                <p>${data.skills[i1].variations[i2].description}</p>
+            </div>
+    `
 }
 
 
