@@ -48,8 +48,7 @@ function generatetiles(data){
 }
 
 function displaySelectedOperator(name){
-    url = `${URL}/${name}`
-    Fetch(url,generateDisplay)
+    Fetch(`${URL}/${name}`,generateDisplay)
 }
 
 //generate display for spesifick opperator info
