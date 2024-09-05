@@ -1,13 +1,17 @@
 const container = document.getElementById('container')
 const URL = 'https://rhodesapi.up.railway.app/api/operator'
 
-//fetching all operators
-function fectch_All (){
-    fetch(`${URL}`)
+function Fetch(url, functioncall){
+    fetch(`${url}`)
     .then((response) => response.json())
       .then((data) => {
-       generatetiles(data)
+       functioncall(data)
        })
+}
+
+//fetching all operators
+function fectch_All (){
+    Fetch(URL,generatetiles)
 }
 fectch_All()
 
@@ -44,11 +48,8 @@ function generatetiles(data){
 }
 
 function displaySelectedOperator(name){
-    fetch(`${URL}/${name}`)
-    .then((response) => response.json())
-      .then((data) => {
-       generateDisplay(data)
-       })
+    url = `${URL}/${name}`
+    Fetch(url,generateDisplay)
 }
 
 //generate display for spesifick opperator info
@@ -267,6 +268,3 @@ function setskilllevel(data,i1,i2){
             </div>
     `
 }
-
-
-
