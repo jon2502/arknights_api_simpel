@@ -1,6 +1,7 @@
 const container = document.getElementById('container')
 const URL = 'https://rhodesapi.up.railway.app/api/operator'
 
+// function for fetching API and returning data via recived funcion call
 function Fetch(url, functioncall){
     fetch(`${url}`)
     .then((response) => response.json())
@@ -27,6 +28,7 @@ function generatetiles(data){
                 ${objects.name}
             </div>
             `
+        // set background color based on character rarity.
         if(objects.rarity === 6){
             button.style.backgroundColor = 'rgb(255, 102, 0)'
         } else if (objects.rarity === 5){
@@ -47,23 +49,33 @@ function generatetiles(data){
 }
 }
 
+//display the selected operator
 function displaySelectedOperator(name){
     Fetch(`${URL}/${name}`,generateDisplay)
 }
 
 //generate display for spesifick opperator info
 function generateDisplay(data) {
-    container.innerHTML=""
+    const btns = document.querySelectorAll('.grid')
+    btns.forEach(btn => {
+        btn.classList.add('none')
+    })
+    //remove child elements and replace it with operator info
     container.setAttribute('id','operator')
     // Close operator info button
     let closeBtn = document.createElement('button');
+    closeBtn.setAttribute('id', 'closeBtn')
     closeBtn.innerText = "X";
     container.append(closeBtn);
     closeBtn.addEventListener('click', () => {
-        container.innerHTML=""
+        var operatorinfor = document.getElementById('operatorinfor')
+        var closeBtn = document.getElementById('closeBtn')
+        container.removeChild(closeBtn)
+        container.removeChild(operatorinfor)
         container.setAttribute('id','container')
-        closeBtn.disabled = true
-        fectch_All ();
+        btns.forEach(btn => {
+            btn.classList.remove('none')
+        })
     })
 
     // operator info
@@ -121,7 +133,6 @@ function generateDisplay(data) {
 
     function changeSkill(){
         let i = this.id
-        console.log(i)
         let skills = document.getElementById('skills')
         skills.innerHTML = `
         <h5>${data.skills[i].name}</h5>
@@ -143,10 +154,8 @@ function generateDisplay(data) {
 
     function changeSkillLevel(){
         let i = this.value
-        console.log(i)
         let currentname = this.name
         let id = data.skills.findIndex(({ name }) => name == currentname);  
-        console.log(id)
         skillinfo = document.getElementById('skill_info')
         skillinfo.innerHTML =`
             ${setskilllevel(data,id,i)}
@@ -172,7 +181,7 @@ function generateDisplay(data) {
             box.innerHTML=`
                 <h3>Biography</h3>
                 <p>${data.biography}</p>
-                <h4> affiliation: ${data.affiliation[0]}
+                <h4> affiliation: ${data.affiliation.map((i)=> `${i}, `).join('').slice(0, -2)}
                 <h4>Infto</h4>
                 <ul>
                 ${info.map((i) => `<li>${i[0]}: ${i[1]}</li>`).join('').replace(/_/g, " ")}
@@ -183,14 +192,13 @@ function generateDisplay(data) {
     function voicelines(){
         let box = document.getElementById('textContent')
         const entries = Object.entries(data.voicelines);
-        slicenumber = entries.length/7
+        slicenumber = entries.length/5
         slicearray=[]
-        buttonarray =[1,2,3,4,5,6,7];
+        buttonarray =[1,2,3,4,5];
         for (let i = 0; i<entries.length; i+=slicenumber){
             const chunk = entries.slice(i, i + slicenumber);
             slicearray.push(chunk);
         }
-        console.log(slicearray)
         //insert voice line then use join to get rid of , and then replace all _ with a space via the use of regex
         box.innerHTML=`
         <h2> voice lines </h2>
@@ -208,7 +216,6 @@ function generateDisplay(data) {
     }
 
     function voice_selctor(slicearray, i){
-        console.log(i)
         let box = document.getElementById('selected_voice_lines')
         box.innerHTML =`
         ${slicearray[i].map((voicelines) => `<p>${voicelines[0]}: ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
@@ -233,18 +240,11 @@ function setskills(data,i1,i2){
                 <p>SP cost</p>
             </div>
             <section id="skill_info">
-            <div class="skills_text">
-                <p>${data.skills[i1].skill_charge}</p>
-                <p>${data.skills[i1].skill_activation}</p>
-                <p>${data.skills[i1].variations[i2].duration}</p>
-                <p>${data.skills[i1].variations[i2].initial_sp}</p>
-                <p>${data.skills[i1].variations[i2].sp_cost}</p>
-            </div>
-            <div>
-                <p>${data.skills[i1].variations[i2].description}</p>
-            </div>
+                ${setskilllevel(data,i1,i2)}
             </section>
         </div>
+        <h3>Talents</h3>
+
         `
 }
 

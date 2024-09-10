@@ -27,6 +27,9 @@ h2{
     text-align: center;
     height: 99%;
 }
+.none {
+    display: none;
+}
 .op-image img{
     width: 90%;
 }
