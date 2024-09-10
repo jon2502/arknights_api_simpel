@@ -7,11 +7,15 @@ h2{
     margin-top: 1.5%;
     margin-bottom: 1%;
 }
+#operator{
+    height: 100%;
+}
 #container{
-    width: 1000px;
+    margin: auto;
+    width: 95%;
     display: grid;
-    grid-template-columns: repeat(15, auto);
-    grid-gap: 2%;
+    grid-template-columns: repeat(10, auto);
+    grid-gap: 0.5%;
 }
 .grid{
     display: flex;
@@ -24,7 +28,7 @@ h2{
     height: 99%;
 }
 .op-image img{
-    width: 100%;
+    width: 90%;
 }
 .overlay{
     position:fixed;

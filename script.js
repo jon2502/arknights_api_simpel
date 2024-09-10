@@ -53,22 +53,17 @@ function displaySelectedOperator(name){
 
 //generate display for spesifick opperator info
 function generateDisplay(data) {
-    console.log(data)
-    let overlay = document.createElement('div');
-    overlay.classList.add('overlay');
-    document.body.prepend(overlay);
-
-    // Modal div
-    let modal = document.createElement('div');
-    modal.classList.add('modal');
-    overlay.append(modal);
-
+    container.innerHTML=""
+    container.setAttribute('id','operator')
     // Close operator info button
     let closeBtn = document.createElement('button');
     closeBtn.innerText = "X";
-    modal.append(closeBtn);
-    closeBtn.addEventListener('click', (e) => {
-        e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
+    container.append(closeBtn);
+    closeBtn.addEventListener('click', () => {
+        container.innerHTML=""
+        container.setAttribute('id','container')
+        closeBtn.disabled = true
+        fectch_All ();
     })
 
     // operator info
@@ -95,7 +90,7 @@ function generateDisplay(data) {
     </div>
     </section>
     `
-    modal.append(operatorinfor);
+    container.append(operatorinfor);
 
     let skillslider = document.getElementById('skillslider')
     skillslider.addEventListener("input",changeSkillLevel)
