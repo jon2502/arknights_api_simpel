@@ -1,6 +1,7 @@
 const container = document.getElementById('container')
 const URL = 'https://rhodesapi.up.railway.app/api/operator'
 
+
 // function for fetching API and returning data via recived funcion call
 function Fetch(url, functioncall){
     fetch(`${url}`)
@@ -18,7 +19,7 @@ fectch_All()
 
 //generate all operator
 function generatetiles(data){
-    for ( objects of data) {
+    for (objects of data) {
         let name = objects.name
         const button = document.createElement('li')
         button.classList.add('grid')
@@ -56,11 +57,13 @@ function displaySelectedOperator(name){
 
 //generate display for spesifick opperator info
 function generateDisplay(data) {
+    // get all buttons and set their display to none as to not remove them but make them not visible
     const btns = document.querySelectorAll('.grid')
     btns.forEach(btn => {
         btn.classList.add('none')
     })
-    //remove child elements and replace it with operator info
+
+    //change id to apply difrent styling
     container.setAttribute('id','operator')
     // Close operator info button
     let closeBtn = document.createElement('button');
@@ -68,6 +71,7 @@ function generateDisplay(data) {
     closeBtn.innerText = "X";
     container.append(closeBtn);
     closeBtn.addEventListener('click', () => {
+        //remove child ellemetns before removing display none from all buttons
         var operatorinfor = document.getElementById('operatorinfor')
         var closeBtn = document.getElementById('closeBtn')
         container.removeChild(closeBtn)
@@ -175,6 +179,7 @@ function generateDisplay(data) {
         })
     }
 
+    // get info on the charater
     function operatorinfo(){
         let box = document.getElementById('textContent')
         const info = Object.entries(data.lore);
