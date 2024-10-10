@@ -57,6 +57,7 @@ function displaySelectedOperator(name){
 
 //generate display for spesifick opperator info
 function generateDisplay(data) {
+    console.log(data)
     // get all buttons and set their display to none as to not remove them but make them not visible
     const btns = document.querySelectorAll('.grid')
     btns.forEach(btn => {
@@ -81,14 +82,13 @@ function generateDisplay(data) {
             btn.classList.remove('none')
         })
     })
-
     // operator info
     let operatorinfor = document.createElement('section');
     operatorinfor.id = "operatorinfor"
     operatorinfor.innerHTML = `
     <div id = "imageAndButtons">
         <h2>${data.name}</h2>
-        <div id = buttons>
+        <div class = "buttons">
             ${data.art.map((art,index) => `<button class="imgButton" id="${index}">${art.name}</button>`).join('')}
         </div>
         <div id = "modalImage">
@@ -96,32 +96,51 @@ function generateDisplay(data) {
         </div>
     </div>
     <section>
-    <div id="select_buttons">
+    <div class= "buttons">
     <button id="select_skills">skills</button>
     <button id="select_info">Operator info</button>
     <button id="select_voicelines">Operator voice lines</button>
     </div>
     <div id="textContent">
-        ${setskills(data,0,0)}
+        ${setstats(data, "base")}
+        ${data.skills && data.skills.length > 0 ?  setskills(data,0,0) : ``}
     </div>
     </section>
     `
     container.append(operatorinfor);
 
-    let skillslider = document.getElementById('skillslider')
-    skillslider.addEventListener("input",changeSkillLevel)
+    if(data.skills && data.skills.length){
+        let skillslider = document.getElementById('skillslider')
+        skillslider.addEventListener("input",changeSkillLevel)
+    }
+
 
    let imgbuttons = document.querySelectorAll('.imgButton')
    imgbuttons.forEach(button =>{
         button.addEventListener("click",changeImg)
     })
 
+    if(data.skills && data.skills.length){
     let skillbuttons = document.querySelectorAll('.skillButton')
     skillbuttons.forEach(button =>{
         button.addEventListener("click",changeSkill)
     })
+
+    let statsButtons = document.querySelectorAll('.statsButton')
+    statsButtons.forEach(button=>{
+        button.addEventListener("click", changestats)
+    })
+
+    function changestats(){
+        id = this.id
+        let Stats = document.getElementById('stats')
+        Stats.innerHTML= `${stats(data, id)}`
+    }
+
+    }
     let skillbuton = document.getElementById('select_skills')
     skillbuton.addEventListener("click",operatorskills)
+
 
     let infobutton = document.getElementById('select_info')
     infobutton.addEventListener("click",operatorinfo)
@@ -130,6 +149,7 @@ function generateDisplay(data) {
     voicebutton.addEventListener("click",voicelines)
 
     function changeImg(){
+        console.log(this.id)
         let i = this.id
         let characterImg = document.getElementById('characterImg')
         characterImg.setAttribute('src', data.art[i].link,)
@@ -151,6 +171,7 @@ function generateDisplay(data) {
             <section id="skill_info">
                 ${setskilllevel(data,i,0)}
             </section>
+
         `
         let skillslider = document.getElementById('skillslider')
         skillslider.addEventListener("input",changeSkillLevel)
@@ -168,14 +189,24 @@ function generateDisplay(data) {
     function operatorskills(){
         let box = document.getElementById('textContent')
         box.innerHTML= `
-        ${setskills(data,0,0)}
+        ${setstats(data, "base")}
+        ${data.skills && data.skills.length > 0 ?  setskills(data,0,0) : ``}
+        
         `
+        if(data.skills && data.skills.length){
         let skillslider = document.getElementById('skillslider')
         skillslider.addEventListener("input",changeSkillLevel)
-
+        }
+        if(data.skills && data.skills.length){
         let skillbuttons = document.querySelectorAll('.skillButton')
         skillbuttons.forEach(button =>{
             button.addEventListener("click",changeSkill)
+        })
+    }
+
+        let statsButtons = document.querySelectorAll('.statsButton')
+        statsButtons.forEach(button=>{
+            button.addEventListener("click", changestats)
         })
     }
 
@@ -208,9 +239,9 @@ function generateDisplay(data) {
         box.innerHTML=`
         <h2> voice lines </h2>
         <div id='selected_voice_lines'>
-        ${slicearray[0].map((voicelines) => `<p>${voicelines[0]}: ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
+        ${slicearray[0].map((voicelines) => `<p><b>${voicelines[0]}:</b> ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
         </div>
-        <div id='voice_line_bt'>
+        <div class = "buttons">
         ${buttonarray.map((numbers) => `<button class="voiceButton" id="${numbers-1}">${numbers}</button>`).join('')}
         </div>
         `
@@ -223,15 +254,17 @@ function generateDisplay(data) {
     function voice_selctor(slicearray, i){
         let box = document.getElementById('selected_voice_lines')
         box.innerHTML =`
-        ${slicearray[i].map((voicelines) => `<p>${voicelines[0]}: ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
+        ${slicearray[i].map((voicelines) => `<b><p>${voicelines[0]}:</b> ${voicelines[1]}</p>`).join('').replace(/_/g, " ")}
         `
     }
 }
 
+
+//text pieces to use in main functions
 function setskills(data,i1,i2){
     return `
         <h3>skills</h3>
-        <div id = buttons>
+        <div class = "buttons">
             ${data.skills.map((skills, index) => `<button class="skillButton" id="${index}">${skills.name}</button>`).join('')}
         </div>
         <div id="skills">
@@ -248,8 +281,6 @@ function setskills(data,i1,i2){
                 ${setskilllevel(data,i1,i2)}
             </section>
         </div>
-        <h3>Talents</h3>
-
         `
 }
 
@@ -265,5 +296,31 @@ function setskilllevel(data,i1,i2){
             <div>
                 <p>${data.skills[i1].variations[i2].description}</p>
             </div>
+    `
+}
+
+function setstats(data, index){
+    var name = Object.getOwnPropertyNames(data.statistics)
+    return`
+        <h3>Stats</h3>
+        <div class = "buttons">
+        ${name.map((i) => `<button class="statsButton" id="${i}">${i}</button>`).join('')}
+        </div>
+        <div id="stats">
+            ${stats(data, index)}
+        </div>
+    `
+}
+
+function stats(data, index){
+    return`
+        <p>HP: ${data.statistics[index].hp}</p>
+        <p>ATK: ${data.statistics[index].atk}</p>
+        <p>DEF: ${data.statistics[index].def}</p>
+        <p>Resist: ${data.statistics.base.resist}</p>
+        <p>Redeploy Time: ${data.statistics.base.deploy} sec</p>
+        <p>Cost: ${data.statistics.base.cost}</p>
+        <p>Block: ${data.statistics[index].block.replace(/^[A-Za-z: ]+/g,"")}</p>
+        <p>Attack Time: ${data.statistics.base.interval} sec</p>
     `
 }

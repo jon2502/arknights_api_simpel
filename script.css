@@ -64,13 +64,9 @@ h2{
     margin-left: 5%;
     margin-right: 5%;
 }
-#select_buttons{
+.buttons{
     display: flex;
     flex-direction: row;
-    gap: 1vw;
-}
-#buttons{
-    display: flex;
     grid-gap: 1%;
 }
 /* image styling */
@@ -84,9 +80,8 @@ h2{
     flex-direction: row;
     justify-content: space-between;
 }
-/*voiceline styling*/
-#voice_line_bt{
-    display: flex;
-    flex-direction: row;
-    gap: 0.5vw;
+#stats{
+    display: grid;
+    grid-template-columns: 25% 25%;
+    grid-template-rows: 20% 20% 20% 20%;
 }
