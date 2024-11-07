@@ -104,6 +104,7 @@ function generateDisplay(data) {
     <div id="textContent">
         ${setstats(data, "base")}
         ${data.skills && data.skills.length > 0 ?  setskills(data,0,0) : ``}
+        ${data.module && data.module.length > 0 ? setModules(data,0) : ``}
     </div>
     </section>
     `
@@ -149,7 +150,6 @@ function generateDisplay(data) {
     voicebutton.addEventListener("click",voicelines)
 
     function changeImg(){
-        console.log(this.id)
         let i = this.id
         let characterImg = document.getElementById('characterImg')
         characterImg.setAttribute('src', data.art[i].link,)
@@ -215,10 +215,12 @@ function generateDisplay(data) {
         let box = document.getElementById('textContent')
         const info = Object.entries(data.lore);
             box.innerHTML=`
+                <h3>Description</h3>
+                <p>${data.description}
                 <h3>Biography</h3>
                 <p>${data.biography}</p>
                 <h4> affiliation: ${data.affiliation.map((i)=> `${i}, `).join('').slice(0, -2)}
-                <h4>Infto</h4>
+                <h4>Info</h4>
                 <ul>
                 ${info.map((i) => `<li>${i[0]}: ${i[1]}</li>`).join('').replace(/_/g, " ")}
                 </ul>
@@ -313,6 +315,9 @@ function setstats(data, index){
 }
 
 function stats(data, index){
+    //insert stats based on index. if index does not contain 
+    //on block count recived from data remove all letters : and spaces to make sure only the number remains.
+    //This is done as a result that the data recived from block is difrent from operator to operator.
     return`
         <p>HP: ${data.statistics[index].hp}</p>
         <p>ATK: ${data.statistics[index].atk}</p>
@@ -323,4 +328,20 @@ function stats(data, index){
         <p>Block: ${data.statistics[index].block.replace(/^[A-Za-z: ]+/g,"")}</p>
         <p>Attack Time: ${data.statistics.base.interval} sec</p>
     `
+}
+
+function setModules(data, i){
+    return `
+    <h3>Modules</h3>
+    <div class = "buttons">
+        ${data.module.map((module, index)=> `<button class="x" id="${index}">${module.name}</button>`).join('')}
+    </div>
+    <div id="moduelInfo>
+        ${ModuelData(data, i)}
+    </div>
+    `
+}
+
+function ModuelData(data, i){
+    return ``
 }
